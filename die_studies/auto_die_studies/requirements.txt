@@ -1,0 +1,36 @@
+# --- Core Data Science & Math ---
+numpy
+scipy
+pandas
+scikit-learn
+scikit-image
+scikit-network
+hdbscan
+umap-learn
+matplotlib
+h5py
+
+# --- Computer Vision ---
+# Using headless contrib version to avoid GUI dependencies and include extra modules
+opencv-contrib-python-headless==4.10.0.84
+# Specific version required for accelerated features
+kornia==0.6.12
+albumentations
+timm
+poselib
+
+# --- Deep Learning (PyTorch & Tools) ---
+torch
+torchvision
+einops
+# Optional: xformers (might depend on specific CUDA version)
+# xformers
+
+# --- Utilities ---
+PyYAML
+tqdm
+loguru
+wandb
+
+# --- RoMa (Robust Matching) ---
+romatch

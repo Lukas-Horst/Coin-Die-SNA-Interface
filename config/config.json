@@ -1,0 +1,34 @@
+{
+  "paths": {
+    "images_obverse": "bueschelquinare_images_test",
+    "images_reverse": "bueschelquinare_images_test",
+    "output_dir": "results",
+    "temp_dir": "flattened_images"
+  },
+  "analysis_settings": {
+    "target_side": "obverse",
+    "active_pipeline": "auto_die_studies"
+  },
+  "pipelines": {
+    "die_study_tool": {
+        "install_path": "../DieStudyTool",
+        "parameters": {
+            "n_clusters": 50,
+            "min_cluster_size": 2,
+            "method": "hierarchical"
+        }
+    },
+    "auto_die_studies": {
+        "install_path": "D:/Uni/7. Semester/BA/Schnittstelle/Auto-Die-Studies",
+        "parameters": {
+            "matching_algorithm": "XFeat",
+            "matching_params": {
+                "XFeat-TopK": 10000,
+                "RoMa-Threshold": 0.9
+            },
+            "filtering": true,
+            "clustering_algorithm": "AGLP"
+        }
+    }
+  }
+}
