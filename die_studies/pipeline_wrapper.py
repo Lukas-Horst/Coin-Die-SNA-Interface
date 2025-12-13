@@ -33,7 +33,7 @@ class PipelineWrapper(ABC):
 
         # --- NEW: Directory Structure Logic ---
         # 1. Create a timestamp: YYYY-MM-DD_HH-MM-SS
-        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        timestamp = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
 
         # 2. Construct the full path: results/pipeline_name/timestamp/
         self.run_output_dir = os.path.join(os.path.abspath(base_output_dir), pipeline_name,

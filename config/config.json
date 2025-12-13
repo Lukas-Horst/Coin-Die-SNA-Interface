@@ -7,15 +7,15 @@
   },
   "analysis_settings": {
     "target_side": "obverse",
-    "active_pipeline": "auto_die_studies"
+    "active_pipeline": "die_study_tool"
   },
   "pipelines": {
     "die_study_tool": {
-        "install_path": "../DieStudyTool",
+        "install_path": "D:/Uni/7. Semester/BA/Schnittstelle/DieStudyTool",
         "parameters": {
-            "n_clusters": 50,
-            "min_cluster_size": 2,
-            "method": "hierarchical"
+            "number_of_clusters": 50,
+            "matching_computation_method": 4,
+            "distance_computation_method": 2
         }
     },
     "auto_die_studies": {

@@ -1,0 +1,26 @@
+# --- Core Math & Data ---
+numpy
+pandas
+scipy
+matplotlib
+openpyxl
+
+# --- Computer Vision ---
+opencv-contrib-python-headless
+scikit-image
+rembg
+
+# --- Deep Learning & Features ---
+torch
+torchvision
+kornia
+kornia-moons
+onnxruntime
+
+# --- Utilities ---
+tqdm
+PyYAML
+scikit-learn
+networkx
+
+Orange3
