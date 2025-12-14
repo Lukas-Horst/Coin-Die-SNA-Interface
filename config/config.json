@@ -7,7 +7,7 @@
   },
   "analysis_settings": {
     "target_side": "obverse",
-    "active_pipeline": "die_study_tool"
+    "active_pipeline": "die_study"
   },
   "pipelines": {
     "die_study_tool": {
@@ -28,6 +28,14 @@
             },
             "filtering": true,
             "clustering_algorithm": "AGLP"
+        }
+    },
+    "die_study": {
+        "install_path": "D:/Uni/7. Semester/BA/Schnittstelle/2023_CAA_ClaReNet/Die_Study",
+        "die_study_tool_path": "D:/Uni/7. Semester/BA/Schnittstelle/DieStudyTool",
+        "parameters": {
+            "number_of_clusters": 50,
+            "distance_computation_method": 13
         }
     }
   }

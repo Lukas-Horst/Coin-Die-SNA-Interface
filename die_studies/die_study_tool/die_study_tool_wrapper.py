@@ -2,7 +2,6 @@ __author__ = 'Lukas Horst'
 
 import os
 import sys
-from unittest.mock import MagicMock
 
 import pandas as pd
 from sklearn.cluster import AgglomerativeClustering
@@ -18,7 +17,6 @@ class DieStudyToolWrapper(PipelineWrapper):
 
     Implements the pipeline logic directly (Preprocessing -> Matching -> Clustering).
     Includes logic to handle small datasets safely (adjusts n_clusters automatically)
-    and mocks the 'Orange' dependency if not present.
     """
 
     def run(self) -> str:
@@ -54,8 +52,9 @@ class DieStudyToolWrapper(PipelineWrapper):
 
         n_clusters = self.parameters.get("number_of_clusters", 50)
         match_method = self.parameters.get("matching_computation_method", 4)
+        dist_func_id = self.parameters.get("distance_computation_method", 2)
 
-        matching_filename = f"matching_clusters{n_clusters}_method{match_method}.csv"
+        matching_filename = f"{self.pipeline_name}_matching_clusters{n_clusters}_method{match_method}_distFunc{dist_func_id}.csv"
         matching_csv_path = os.path.join(self.run_output_dir, matching_filename)
 
         self.compute_matches(matcher_func=extract_kornia_matches_in_directory, utils_module=utils,
@@ -66,7 +65,7 @@ class DieStudyToolWrapper(PipelineWrapper):
         # ---------------------------------------------------------
         print("4. Running Clustering...")
 
-        clustering_filename = f"clustering_clusters{n_clusters}_method{match_method}.csv"
+        clustering_filename = f"{self.pipeline_name}_clustering_clusters{n_clusters}_method{match_method}_distFunc{dist_func_id}.csv"
         clustering_csv_path = os.path.join(self.run_output_dir, clustering_filename)
 
         self.compute_clustering(utils_module=utils, matching_csv_path=matching_csv_path,
@@ -77,7 +76,7 @@ class DieStudyToolWrapper(PipelineWrapper):
         # ---------------------------------------------------------
         print("5. Standardizing Results...")
 
-        json_filename = f"sna_data_clusters{n_clusters}_method{match_method}.json"
+        json_filename = f"{self.pipeline_name}_sna_data_clusters{n_clusters}_method{match_method}_distFunc{dist_func_id}.json"
         final_json_path = os.path.join(self.run_output_dir, json_filename)
 
         data_utils.convert_csv_to_sna_json(csv_path=clustering_csv_path,

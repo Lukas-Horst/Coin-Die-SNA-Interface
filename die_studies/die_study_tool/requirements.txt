@@ -1,5 +1,5 @@
 # --- Core Math & Data ---
-numpy
+numpy==1.26.3
 pandas
 scipy
 matplotlib

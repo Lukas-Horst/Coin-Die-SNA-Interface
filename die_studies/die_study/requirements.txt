@@ -1,0 +1,21 @@
+# === Core Data & Math ===
+numpy==1.26.3
+pandas>=2.2.3
+scipy>=1.14.1
+matplotlib>=3.9.3
+
+# === Computer Vision ===
+opencv-contrib-python-headless>=4.10.0.84
+imageio>=2.36.0
+scikit-image>=0.24.0
+
+# === Machine Learning & Clustering ===
+scikit-learn>=1.5.2
+scikit-network>=0.33.1
+
+# === Utilities ===
+joblib>=1.4.0
+tqdm>=4.67.1
+openpyxl>=3.1.5
+
+umap-learn>=0.5.5
