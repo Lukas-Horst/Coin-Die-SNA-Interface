@@ -27,9 +27,10 @@ class DieStudyWrapper(PipelineWrapper):
     """
 
     def __init__(self, pipeline_name: str, install_path: str, die_study_tool_path: str,
-                 parameters: dict, raw_source_path: str, work_dir: str, base_output_dir: str):
+                 parameters: dict, raw_source_path: str, work_dir: str, base_output_dir: str,
+                 target_side: str):
         super().__init__(pipeline_name, install_path, parameters, raw_source_path, work_dir,
-                         base_output_dir)
+                         base_output_dir, target_side)
 
         self.die_study_tool_path = os.path.abspath(die_study_tool_path)
 
@@ -90,7 +91,7 @@ class DieStudyWrapper(PipelineWrapper):
         tool_wrapper = DieStudyToolWrapper(pipeline_name="temp_clustering",
             install_path=self.die_study_tool_path, parameters=self.parameters,
             raw_source_path=self.raw_source_path, work_dir=self.work_dir,
-            base_output_dir=self.run_output_dir)
+            base_output_dir=self.run_output_dir, target_side=self.target_side)
 
         try:
             tool_wrapper.compute_clustering(utils_module=dst_utils,

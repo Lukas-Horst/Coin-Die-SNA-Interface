@@ -2,8 +2,8 @@
     "paths": {
         "dataset-obverse": "die_studie_obverse_12_aglp.json",
         "dataset-reverse": "die_studie_reverse_14_projhdbscan.json",
-        "images_obverse": "D:/Uni/7. Semester/BA/Schnittstelle/Coin-Die-SNA-Data/bueschelquinare_images/obverse",
-        "images_reverse": "D:/Uni/7. Semester/BA/Schnittstelle/Coin-Die-SNA-Data/bueschelquinare_images/reverse",
+        "images_obverse": "D:/Uni/7. Semester/BA/Schnittstelle/Coin-Die-SNA-Data/bueschelquinare_images_test",
+        "images_reverse": "D:/Uni/7. Semester/BA/Schnittstelle/Coin-Die-SNA-Data/bueschelquinare_images_test",
         "findspot_data": "D:/Uni/7. Semester/BA/Schnittstelle/Coin-Die-SNA-Data/numisdata_bushel.csv",
         "die_ground_truth": "D:/Uni/7. Semester/BA/Schnittstelle/Coin-Die-SNA-Data/die_ground_truth.csv",
         "output_dir": "results",
@@ -11,7 +11,7 @@
     },
     "analysis_settings": {
         "target_side": "obverse",
-        "active_pipeline": "die_study"
+        "active_pipeline": "auto_die_studies"
     },
     "pipelines": {
         "die_study_tool": {

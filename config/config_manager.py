@@ -2,6 +2,7 @@ __author__ = 'Lukas Horst'
 
 import json
 import os
+import re
 from typing import Dict, Any
 
 from data_utils import get_files_from_directory_recursive, find_file
@@ -172,11 +173,69 @@ class ConfigManager:
         return analysis_files
 
     def get_current_analysis_file(self, side='r'):
+        """
+        Finds the full absolute path to the currently configured analysis result file
+        (JSON format) based on the specified coin side.
+
+        The search is performed recursively within the general output directory
+        using the file name defined in the configuration (e.g., dataset-reverse).
+
+        Args:
+            side (str, optional): The target side of the analysis file.
+                                  Use 'r' for reverse or
+                                  'a' for obverse.
+                                  Defaults to 'r'.
+
+        Returns:
+            str or None: The full absolute path to the found analysis file,
+                         or None if the file is not found.
+        """
         if side == 'r':
             file = find_file(self.get_output_dir(), self.config["paths"]["dataset-reverse"])
         elif side == 'a':
             file = find_file(self.get_output_dir(), self.config["paths"]["dataset-obverse"])
         return file
+
+    def get_combined_analysis_file_name(self) -> str:
+        """
+        Creates a combined file name for analysis results based on the names
+        of the obverse and reverse analysis files defined in the config.
+
+        The function extracts the unique timestamp from each file name and
+        combines them to ensure a unique result file name.
+
+        Returns:
+            str: A unique file name for the combined analysis (e.g.,
+                 'combined_analysis_TS_REV_TS_OBV').
+        """
+        reverse_dataset_name = self.config["paths"]["dataset-reverse"]
+        obverse_dataset_name = self.config["paths"]["dataset-obverse"]
+
+        # Define a regex pattern to find the timestamp (e.g., 15-12-2025_16-06-32)
+        # The pattern captures the timestamp part.
+        timestamp_pattern = r'(\d{2}-\d{2}-\d{4}_\d{2}-\d{2}-\d{2})'
+
+        # 1. Extract the Reverse timestamp
+        match_rev = re.search(timestamp_pattern, reverse_dataset_name)
+        if match_rev:
+            timestamp_rev = match_rev.group(1)
+        else:
+            # Fallback if no timestamp is found
+            timestamp_rev = "no_ts_rev"
+            print(f"WARNING: No timestamp found in reverse dataset name: {reverse_dataset_name}")
+
+        # 2. Extract the Obverse timestamp
+        match_obv = re.search(timestamp_pattern, obverse_dataset_name)
+        if match_obv:
+            timestamp_obv = match_obv.group(1)
+        else:
+            # Fallback if no timestamp is found
+            timestamp_obv = "no_ts_obv"
+            print(f"WARNING: No timestamp found in obverse dataset name: {obverse_dataset_name}")
+
+        # 3. Construct the new, combined file name
+        combined_filename = f"combined_analysis_R_{timestamp_rev}_A_{timestamp_obv}"
+        return combined_filename
 
 
 # Example usage for testing
