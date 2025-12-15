@@ -50,7 +50,10 @@ class AutoDieStudiesWrapper(PipelineWrapper):
         # Save matches.npy inside the specific run directory
         clustering_algo = self.parameters.get("clustering_algorithm", "AGLP")
         matching_algo = self.parameters.get("matching_algorithm", "XFeat")
-        sim_matrix_path = os.path.join(self.run_output_dir, f"{self.pipeline_name}_matching_{matching_algo}_{clustering_algo}.npy")
+        sim_matrix_path = os.path.join(self.run_output_dir, f"{self.pipeline_name}_"
+                                                            f"{self.target_side}_matching_"
+                                                            f"{matching_algo}_{clustering_algo}_"
+                                                            f"{self.timestamp}.npy")
 
         match_params = self.parameters.get("matching_params", {})
         filtering = self.parameters.get("filtering", True)
@@ -89,14 +92,17 @@ class AutoDieStudiesWrapper(PipelineWrapper):
         print("5. Standardizing Results...")
 
         # A) CSV (inside run directory)
-        csv_path = os.path.join(self.run_output_dir, f"{self.pipeline_name}_clustering_{matching_algo}_{clustering_algo}.csv")
+        csv_path = os.path.join(self.run_output_dir, f"{self.pipeline_name}_{self.target_side}"
+                                                     f"_clustering_{matching_algo}_"
+                                                     f"{clustering_algo}_{self.timestamp}.csv")
 
         data_utils.create_clustering_csv(cluster_ids=partition, images_dir=self.work_dir,
             output_csv_path=csv_path, cluster_column_name="cluster_id")
 
         # B) Final JSON with Parameter Names
         # Construct filename: e.g., sna_data_XFeat_AGLP.json
-        json_filename = f"{self.pipeline_name}_sna_data_{matching_algo}_{clustering_algo}.json"
+        json_filename = (f"{self.pipeline_name}_{self.target_side}_sna_data_{matching_algo}_"
+                         f"{clustering_algo}_{self.timestamp}.json")
         final_json_path = os.path.join(self.run_output_dir, json_filename)
 
         data_utils.convert_csv_to_sna_json(csv_path=csv_path, cluster_col="cluster_id",

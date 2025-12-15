@@ -71,7 +71,9 @@ class DieStudyWrapper(PipelineWrapper):
         print("3. Computing Matches (Die_Study Matcher)...")
 
         # User output file (contains file paths, human-readable)
-        matching_csv_path = os.path.join(self.run_output_dir, f"{self.pipeline_name}_matching.csv")
+        matching_csv_path = os.path.join(self.run_output_dir, f"{self.pipeline_name}_"
+                                                              f"{self.target_side}_matching_"
+                                                              f"{self.timestamp}.csv")
 
         self.compute_matches(matcher, dst_utils, final_images_path, matching_csv_path)
 
@@ -80,7 +82,8 @@ class DieStudyWrapper(PipelineWrapper):
         # ---------------------------------------------------------
         print("4. Running Clustering (Delegating to DieStudyTool)...")
         clustering_csv_path = os.path.join(self.run_output_dir,
-                                           f"{self.pipeline_name}_clustering.csv")
+                                           f"{self.pipeline_name}_{self.target_side}"
+                                           f"_clustering_{self.timestamp}.csv")
 
         # Instantiate DieStudyToolWrapper just for this step
         # This will create a folder 'temp_clustering' inside our current output directory
@@ -118,8 +121,9 @@ class DieStudyWrapper(PipelineWrapper):
 
         n_clusters = self.parameters.get("number_of_clusters", 50)
         dist_func_id = self.parameters.get("distance_computation_method", 13)
-        json_filename = (f"{self.pipeline_name}_sna_data_clusters{n_clusters}_distFun"
-                         f"c{dist_func_id}.json")
+        json_filename = (f"{self.pipeline_name}_{self.target_side}_"
+                         f"sna_data_clusters{n_clusters}_distFunc{dist_func_id}"
+                         f"_{self.timestamp}.json")
         final_json_path = os.path.join(self.run_output_dir, json_filename)
 
         data_utils.convert_csv_to_sna_json(csv_path=clustering_csv_path,

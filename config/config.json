@@ -1,42 +1,46 @@
 {
-  "paths": {
-    "images_obverse": "bueschelquinare_images_test",
-    "images_reverse": "bueschelquinare_images_test",
-    "output_dir": "results",
-    "temp_dir": "flattened_images"
-  },
-  "analysis_settings": {
-    "target_side": "obverse",
-    "active_pipeline": "die_study"
-  },
-  "pipelines": {
-    "die_study_tool": {
-        "install_path": "D:/Uni/7. Semester/BA/Schnittstelle/DieStudyTool",
-        "parameters": {
-            "number_of_clusters": 50,
-            "matching_computation_method": 4,
-            "distance_computation_method": 2
-        }
+    "paths": {
+        "dataset-obverse": "die_studie_obverse_12_aglp.json",
+        "dataset-reverse": "die_studie_reverse_14_projhdbscan.json",
+        "images_obverse": "D:/Uni/7. Semester/BA/Schnittstelle/Coin-Die-SNA-Data/bueschelquinare_images/obverse",
+        "images_reverse": "D:/Uni/7. Semester/BA/Schnittstelle/Coin-Die-SNA-Data/bueschelquinare_images/reverse",
+        "findspot_data": "D:/Uni/7. Semester/BA/Schnittstelle/Coin-Die-SNA-Data/numisdata_bushel.csv",
+        "die_ground_truth": "D:/Uni/7. Semester/BA/Schnittstelle/Coin-Die-SNA-Data/die_ground_truth.csv",
+        "output_dir": "results",
+        "temp_dir": "flattened_images"
     },
-    "auto_die_studies": {
-        "install_path": "D:/Uni/7. Semester/BA/Schnittstelle/Auto-Die-Studies",
-        "parameters": {
-            "matching_algorithm": "XFeat",
-            "matching_params": {
-                "XFeat-TopK": 10000,
-                "RoMa-Threshold": 0.9
-            },
-            "filtering": true,
-            "clustering_algorithm": "AGLP"
-        }
+    "analysis_settings": {
+        "target_side": "obverse",
+        "active_pipeline": "die_study"
     },
-    "die_study": {
-        "install_path": "D:/Uni/7. Semester/BA/Schnittstelle/2023_CAA_ClaReNet/Die_Study",
-        "die_study_tool_path": "D:/Uni/7. Semester/BA/Schnittstelle/DieStudyTool",
-        "parameters": {
-            "number_of_clusters": 50,
-            "distance_computation_method": 13
+    "pipelines": {
+        "die_study_tool": {
+            "install_path": "D:/Uni/7. Semester/BA/Schnittstelle/DieStudyTool",
+            "parameters": {
+                "number_of_clusters": 50,
+                "matching_computation_method": 4,
+                "distance_computation_method": 2
+            }
+        },
+        "auto_die_studies": {
+            "install_path": "D:/Uni/7. Semester/BA/Schnittstelle/Auto-Die-Studies",
+            "parameters": {
+                "matching_algorithm": "XFeat",
+                "matching_params": {
+                    "XFeat-TopK": 10000,
+                    "RoMa-Threshold": 0.9
+                },
+                "filtering": true,
+                "clustering_algorithm": "AGLP"
+            }
+        },
+        "die_study": {
+            "install_path": "D:/Uni/7. Semester/BA/Schnittstelle/2023_CAA_ClaReNet/Die_Study",
+            "die_study_tool_path": "D:/Uni/7. Semester/BA/Schnittstelle/DieStudyTool",
+            "parameters": {
+                "number_of_clusters": 50,
+                "distance_computation_method": 13
+            }
         }
     }
-  }
 }

@@ -54,7 +54,9 @@ class DieStudyToolWrapper(PipelineWrapper):
         match_method = self.parameters.get("matching_computation_method", 4)
         dist_func_id = self.parameters.get("distance_computation_method", 2)
 
-        matching_filename = f"{self.pipeline_name}_matching_clusters{n_clusters}_method{match_method}_distFunc{dist_func_id}.csv"
+        matching_filename = (f"{self.pipeline_name}_{self.target_side}_matching_"
+                             f"clusters{n_clusters}"
+                             f"_method{match_method}_distFunc{dist_func_id}_{self.timestamp}.csv")
         matching_csv_path = os.path.join(self.run_output_dir, matching_filename)
 
         self.compute_matches(matcher_func=extract_kornia_matches_in_directory, utils_module=utils,
@@ -65,7 +67,8 @@ class DieStudyToolWrapper(PipelineWrapper):
         # ---------------------------------------------------------
         print("4. Running Clustering...")
 
-        clustering_filename = f"{self.pipeline_name}_clustering_clusters{n_clusters}_method{match_method}_distFunc{dist_func_id}.csv"
+        clustering_filename = (f"{self.pipeline_name}_{self.target_side}_clustering_clusters{n_clusters}"
+                               f"_method{match_method}_distFunc{dist_func_id}_{self.timestamp}.csv")
         clustering_csv_path = os.path.join(self.run_output_dir, clustering_filename)
 
         self.compute_clustering(utils_module=utils, matching_csv_path=matching_csv_path,
@@ -76,7 +79,8 @@ class DieStudyToolWrapper(PipelineWrapper):
         # ---------------------------------------------------------
         print("5. Standardizing Results...")
 
-        json_filename = f"{self.pipeline_name}_sna_data_clusters{n_clusters}_method{match_method}_distFunc{dist_func_id}.json"
+        json_filename = (f"{self.pipeline_name}_{self.target_side}_sna_data_clusters{n_clusters}"
+                         f"_method{match_method}_distFunc{dist_func_id}_{self.timestamp}.json")
         final_json_path = os.path.join(self.run_output_dir, json_filename)
 
         data_utils.convert_csv_to_sna_json(csv_path=clustering_csv_path,

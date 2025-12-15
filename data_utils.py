@@ -5,7 +5,7 @@ import json
 import os
 import re
 import shutil
-from typing import Optional, List
+from typing import Optional, List, Tuple
 
 from tqdm import tqdm
 
@@ -299,6 +299,71 @@ def convert_csv_to_sna_json(csv_path: str, cluster_col: str, image_col: str,
 
     except Exception as e:
         print(f"Error converting CSV to JSON: {e}")
+
+
+def get_files_from_directory_recursive(directory_path: str, allowed_extensions: Optional[Tuple[
+    str, ...]] = None) -> List[Tuple[str, str]]:
+    """
+    Retrieves a list of full file paths and file names from a specified directory
+    and all its subdirectories (recursive search).
+    Optionally filters the files based on a tuple of allowed extensions.
+
+    :param directory_path: The string path to the directory to search.
+    :param allowed_extensions: A tuple of strings representing allowed file extensions (e.g., ('.png', '.jpg')).
+                               If None, all files are returned.
+    :return: A list of tuples, where each tuple is (full_file_path, file_name).
+    """
+    file_list: List[Tuple[str, str]] = []
+
+    # Check if the directory exists to prevent runtime errors
+    if not os.path.exists(directory_path):
+        print(f"Directory not found: {directory_path}")
+        return []
+
+    # os.walk iterates through the directory tree rooted at directory_path
+    # It yields a 3-tuple (dirpath, dirnames, filenames) for each directory
+    for root, _, file_names in os.walk(directory_path):
+        # 'root' is the current directory path being walked
+        # 'file_names' is a list of file names in the current 'root' directory
+
+        for file_name in file_names:
+            # Construct the full file path by joining the current root and the filename
+            full_path = os.path.join(root, file_name)
+
+            # Check for allowed extensions if a filter is provided
+            if allowed_extensions:
+                # To ensure case-insensitive comparison, we convert the filename to lowercase.
+                if file_name.lower().endswith(allowed_extensions):
+                    # Append the tuple (full_path, file_name)
+                    file_list.append((full_path, file_name))
+            else:
+                # If no filter is set, add every file found
+                # Append the tuple (full_path, file_name)
+                file_list.append((full_path, file_name))
+
+    return file_list
+
+
+def find_file(start_path: str, file_name: str) -> str or None:
+    """
+    Recursively searches for a specific file starting from a given directory path.
+
+    Args:
+        start_path (str): The directory path where the search should begin.
+        file_name (str): The name of the file to search for (including extension).
+
+    Returns:
+        str or None: The full path of the file if found, otherwise None.
+    """
+    # Walk through the directory tree starting from startPath
+    for root, dirs, files in os.walk(start_path):
+        # Check if the target file name is in the list of files in the current directory (root)
+        if file_name in files:
+            # If found, return the full path by joining the current root directory and the file name
+            return os.path.join(root, file_name)
+
+    # If the loop finishes without finding the file, return None
+    return None
 
 
 if __name__ == "__main__":
