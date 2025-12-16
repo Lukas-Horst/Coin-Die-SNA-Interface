@@ -237,6 +237,60 @@ class ConfigManager:
         combined_filename = f"combined_analysis_R_{timestamp_rev}_A_{timestamp_obv}"
         return combined_filename
 
+    def get_images_by_id_and_side(self, coin_id1, coin_id2, side):
+        """
+        Finds the full paths to the image files for two specified coin IDs (coin_id1 and coin_id2)
+        by searching for a filename pattern starting with the ID.
+
+        The function uses a regular expression to match files that begin with the coin ID,
+        followed by common separators ('_', '-', or '.'), and any file extension/suffix.
+
+        Args:
+            coin_id1 (str or int): The first coin's unique ID.
+            coin_id2 (str or int): The second coin's unique ID.
+            side (str): The target side of the image: 'a' for obverse or
+                        'r' for reverse.
+
+        Returns:
+            tuple[Optional[str], Optional[str]]: A tuple containing the full path
+                                                 to coin1's image and coin2's image.
+                                                 Returns None for an image if it is not found.
+
+        Raises:
+            ValueError: If an invalid side ('a' or 'r') is provided.
+        """
+        paths = self.config.get("paths", {})
+
+        # Getting the image path for the given side
+        if side == "a":
+            image_path = paths.get("images_obverse")
+        elif side == "r":
+            image_path = paths.get("images_reverse")
+        else:
+            # Handle invalid side input
+            raise ValueError("Invalid side specified. Must be 'a' (obverse) or 'r' (reverse).")
+
+        # Define common image file extensions
+        image_extensions = r'(?:\.jpe?g|\.png|\.tif|\.tiff|\.gif)'
+
+        # 1. Construct the Regex Pattern for coin_id1
+
+        # We use re.escape() to ensure that if coin_id1 contains regex special characters,
+        # they are treated as literals.
+        pattern1 = rf'^{re.escape(str(coin_id1))}[_\-.].*{image_extensions}$'
+
+        # Use find_file with the file_pattern argument
+        coin1_file = find_file(image_path, file_pattern=pattern1)
+
+        # 2. Construct the Regex Pattern for coin_id2
+        pattern2 = rf'^{re.escape(str(coin_id2))}[_\-.].*{image_extensions}$'
+
+        # Use find_file with the file_pattern argument
+        coin2_file = find_file(image_path, file_pattern=pattern2)
+
+        # Return both paths
+        return coin1_file, coin2_file
+
 
 # Example usage for testing
 if __name__ == "__main__":

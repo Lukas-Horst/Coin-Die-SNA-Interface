@@ -344,23 +344,61 @@ def get_files_from_directory_recursive(directory_path: str, allowed_extensions: 
     return file_list
 
 
-def find_file(start_path: str, file_name: str) -> str or None:
+def find_file(start_path: str, file_name: Optional[str] = None,
+              file_pattern: Optional[str] = None) -> Optional[str]:
     """
-    Recursively searches for a specific file starting from a given directory path.
+    Recursively searches for a specific file (by name or regex pattern)
+    starting from a given directory path.
 
     Args:
         start_path (str): The directory path where the search should begin.
-        file_name (str): The name of the file to search for (including extension).
+        file_name (Optional[str]): The exact name of the file to search for.
+                                   (Recommended if searching for an exact name).
+        file_pattern (Optional[str]): A regular expression (regex) pattern
+                                      to match the file name.
+                                      (Used if file_name is None).
 
     Returns:
-        str or None: The full path of the file if found, otherwise None.
+        Optional[str]: The full path of the first matching file found,
+                       otherwise None.
+
+    Raises:
+        ValueError: If neither file_name nor file_pattern is provided, or if the
+                    regex pattern is invalid.
     """
-    # Walk through the directory tree starting from startPath
+
+    # --- Preparation and Validation ---
+
+    # Ensure at least one search method is provided
+    if file_name is None and file_pattern is None:
+        raise ValueError("Either 'file_name' or 'file_pattern' must be provided.")
+
+    # If a pattern was passed, compile it
+    compiled_pattern = None
+    if file_pattern is not None:
+        try:
+            compiled_pattern = re.compile(file_pattern)
+        except re.error as e:
+            raise ValueError(f"Invalid regex pattern: {e}")
+
+    # --- Recursive Search ---
+
+    # Walk through the directory tree starting from start_path
     for root, dirs, files in os.walk(start_path):
-        # Check if the target file name is in the list of files in the current directory (root)
-        if file_name in files:
-            # If found, return the full path by joining the current root directory and the file name
-            return os.path.join(root, file_name)
+
+        # 1. Search for exact file name (standard behavior)
+        if file_name is not None:
+            if file_name in files:
+                # If found, return the full path
+                return os.path.join(root, file_name)
+
+        # 2. Search by Pattern (if pattern is available and exact name is missing)
+        elif compiled_pattern is not None:
+            for f in files:
+                # Check if the compiled pattern matches the file name (from the start)
+                if compiled_pattern.match(f):
+                    # On match: return the full path immediately
+                    return os.path.join(root, f)
 
     # If the loop finishes without finding the file, return None
     return None
