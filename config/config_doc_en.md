@@ -71,7 +71,10 @@ The parameter `method_id` accepts the following IDs.
 This section defines specific parameters for the individual pipeline wrappers.
 
 ### 5.1 DieStudyTool (Fiedler)
-Configuration for the pipeline controlled via the `variables.py` file.
+**Installation:**
+```bash
+git clone [https://github.com/Urjarm/DieStudyTool.git](https://github.com/Urjarm/DieStudyTool.git)
+```
 
 | Parameter | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
@@ -119,7 +122,10 @@ The parameter `distance_computation_method` accepts the following IDs:
 | `9` | SciPy Spatial Canberra | | |
 
 ### 5.2 Auto-Die-Studies (Cornet et al.)
-Configuration for the pipeline based on Deep Learning Feature Matchers.
+**Installation:**
+```bash
+git clone --recurse-submodules [https://github.com/ClementCornet/Auto-Die-Studies.git](https://github.com/ClementCornet/Auto-Die-Studies.git)
+```
 
 | Parameter | Type | Allowed Values / Description |
 | :--- | :--- | :--- |
@@ -133,6 +139,11 @@ Configuration for the pipeline based on Deep Learning Feature Matchers.
 
 ### 5.3 Die_Study (Hybrid)
 A hybrid pipeline that uses its own preprocessing chain (Grayscale -> Denoise -> CLAHE -> Crop) but relies on the clustering algorithms of the `DieStudyTool`.
+
+**Installation:**
+```bash
+git clone [https://github.com/Frankfurt-BigDataLab/2023_CAA_ClaReNet.git](https://github.com/Frankfurt-BigDataLab/2023_CAA_ClaReNet.git)
+```
 
 | Parameter | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
