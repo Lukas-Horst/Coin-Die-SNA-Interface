@@ -6,21 +6,21 @@ matplotlib
 openpyxl
 
 # --- Computer Vision ---
-opencv-contrib-python-headless
-scikit-image
+opencv-contrib-python-headless>=4.10.0.84
+scikit-image>=0.24.0
 rembg
 
 # --- Deep Learning & Features ---
 torch
 torchvision
-kornia
+kornia==0.8.2
 kornia-moons
 onnxruntime
 
 # --- Utilities ---
-tqdm
+tqdm>=4.67.1
 PyYAML
-scikit-learn
+scikit-learn>=1.5.2
 networkx
 
 Orange3

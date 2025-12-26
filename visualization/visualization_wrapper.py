@@ -9,15 +9,6 @@ import imageio.v2 as io
 from io import BytesIO
 from timeit import default_timer as timer
 
-import sys
-import os
-import cv2
-import numpy as np
-import torch
-import imageio.v2 as io
-from io import BytesIO
-from timeit import default_timer as timer
-
 
 class VisualizationWrapper:
     """
@@ -59,7 +50,7 @@ class VisualizationWrapper:
         except:
             self.dst_config = {}
 
-    def _import_xfeat(self):
+    def __import_xfeat(self):
         """Imports XFeat from Auto-Die-Studies path."""
         if self.XFeat is not None: return
 
@@ -75,7 +66,7 @@ class VisualizationWrapper:
         except ImportError as e:
             raise ImportError(f"Could not import XFeat from {install_path}: {e}")
 
-    def _import_distance_matcher(self):
+    def __import_distance_matcher(self):
         """Imports distance_matcher.py from DieStudyTool path."""
         if self.distance_matcher is not None: return
 
@@ -115,7 +106,7 @@ class VisualizationWrapper:
 
             else:
                 # Classic Methods (Delegating to distance_matcher.py)
-                score, canvas = self._visualize_via_tool(image_path1, image_path2, self.method_id)
+                score, canvas = self.__visualize_via_tool(image_path1, image_path2, self.method_id)
 
         except Exception as e:
             print(f"Error during matching calculation: {e}")
@@ -152,7 +143,7 @@ class VisualizationWrapper:
     # ID 1: XFeat (Deep Learning)
     # =========================================================================
     def _visualize_xfeat(self, img_path1, img_path2):
-        self._import_xfeat()
+        self.__import_xfeat()
         params = self.ads_config.get("parameters", {})
         top_k = params.get("matching_params", {}).get("XFeat-TopK", 4096)
         filtering = params.get("filtering", True)
@@ -175,7 +166,7 @@ class VisualizationWrapper:
         mkpts_0, mkpts_1 = matches_list[0], matches_list[1]
 
         # Draw
-        canvas = self._warp_corners_and_draw_matches(mkpts_0, mkpts_1, im1_cv, im2_cv)
+        canvas = self.__warp_corners_and_draw_matches(mkpts_0, mkpts_1, im1_cv, im2_cv)
 
         score = len(mkpts_0)
         if filtering and len(mkpts_0) >= 4:
@@ -185,16 +176,16 @@ class VisualizationWrapper:
 
         return score, canvas
 
-    def _warp_corners_and_draw_matches(self, ref_points, dst_points, img1, img2):
+    def __warp_corners_and_draw_matches(self, ref_points, dst_points, img1, img2):
         """Draws the matches and the transformed bounding box (Homography) for XFeat."""
         if len(ref_points) < 4:
-            return self._draw_simple_matches(ref_points, dst_points, img1, img2)
+            return self.__draw_simple_matches(ref_points, dst_points, img1, img2)
 
         H, mask = cv2.findHomography(ref_points, dst_points, method=cv2.USAC_MAGSAC,
                                      ransacReprojThreshold=8)
 
         if H is None:
-            return self._draw_simple_matches(ref_points, dst_points, img1, img2)
+            return self.__draw_simple_matches(ref_points, dst_points, img1, img2)
 
         score = mask.sum()
         mask = mask.flatten()
@@ -206,7 +197,7 @@ class VisualizationWrapper:
         try:
             warped_corners = cv2.perspectiveTransform(corners_img1, H)
         except Exception:
-            return self._draw_simple_matches(ref_points, dst_points, img1, img2)
+            return self.__draw_simple_matches(ref_points, dst_points, img1, img2)
 
         img2_with_corners = img2.copy()
         for i in range(len(warped_corners)):
@@ -227,7 +218,7 @@ class VisualizationWrapper:
 
         return img_matches
 
-    def _draw_simple_matches(self, ref_points, dst_points, img1, img2):
+    def __draw_simple_matches(self, ref_points, dst_points, img1, img2):
         kp1 = [cv2.KeyPoint(p[0], p[1], 5) for p in ref_points]
         kp2 = [cv2.KeyPoint(p[0], p[1], 5) for p in dst_points]
         matches = [cv2.DMatch(i, i, 0) for i in range(len(ref_points))]
@@ -236,12 +227,12 @@ class VisualizationWrapper:
     # =========================================================================
     # ID 2-6: Classic Methods (via DieStudyTool distance_matcher.py)
     # =========================================================================
-    def _visualize_via_tool(self, img_path1, img_path2, method_id):
+    def __visualize_via_tool(self, img_path1, img_path2, method_id):
         """
         Delegates the calculation to the imported 'distance_matcher' module
         and handles the visualization. Robust against varying return values.
         """
-        self._import_distance_matcher()
+        self.__import_distance_matcher()
         dm = self.distance_matcher
 
         # Load color images for drawing (tool loads grayscale internally)

@@ -25,7 +25,7 @@ class DieStudyToolWrapper(PipelineWrapper):
         # ---------------------------------------------------------
         # STEP 0: Imports & Setup
         # ---------------------------------------------------------
-        self._setup_imports()
+        self.__setup_imports()
 
         try:
             import utils
@@ -91,7 +91,7 @@ class DieStudyToolWrapper(PipelineWrapper):
         print(f"--- Pipeline Finished. JSON saved to: {final_json_path} ---")
         return final_json_path
 
-    def _setup_imports(self):
+    def __setup_imports(self):
         if self.install_path not in sys.path:
             sys.path.append(self.install_path)
 

@@ -43,7 +43,7 @@ class DieStudyWrapper(PipelineWrapper):
         # ---------------------------------------------------------
         # STEP 0: Imports & Setup
         # ---------------------------------------------------------
-        self._setup_imports()
+        self.__setup_imports()
 
         try:
             import utils as dst_utils
@@ -135,7 +135,7 @@ class DieStudyWrapper(PipelineWrapper):
         print(f"--- Pipeline Finished. JSON saved to: {final_json_path} ---")
         return final_json_path
 
-    def _setup_imports(self):
+    def __setup_imports(self):
         """Adds DieStudyTool and local image-processing paths to sys.path."""
         if self.die_study_tool_path not in sys.path:
             sys.path.append(self.die_study_tool_path)
@@ -169,7 +169,7 @@ class DieStudyWrapper(PipelineWrapper):
         dst_utils.grayscale_directory(input_dir, exp1)
 
         print(f"  - Step 2: ROF Denoising")
-        self._apply_denoise_parallel(rof_module, exp1, exp2)
+        self.__apply_denoise_parallel(rof_module, exp1, exp2)
 
         print(f"  - Step 3: CLAHE")
         if hasattr(dst_utils, 'clahe_directory'):
@@ -178,14 +178,14 @@ class DieStudyWrapper(PipelineWrapper):
             dst_utils.histogram_equalization_directory(exp2, exp3)
 
         print(f"  - Step 4: ROF Denoising (2nd pass)")
-        self._apply_denoise_parallel(rof_module, exp3, exp4)
+        self.__apply_denoise_parallel(rof_module, exp3, exp4)
 
         print(f"  - Step 5: Circle Crop")
         dst_utils.circle_crop_directory(exp4, exp5)
 
         return exp5
 
-    def _apply_denoise_parallel(self, rof_module, src_dir, target_dir):
+    def __apply_denoise_parallel(self, rof_module, src_dir, target_dir):
         """Applies ROF denoising in parallel."""
         tasks = []
         for root, _, files in os.walk(src_dir):
@@ -197,10 +197,10 @@ class DieStudyWrapper(PipelineWrapper):
 
         print(f"    Processing {len(tasks)} images (Parallel)...")
         Parallel(n_jobs=4, prefer="threads")(
-            delayed(self._rof_worker)(t[0], t[1], rof_module) for t in tasks)
+            delayed(self.__rof_worker)(t[0], t[1], rof_module) for t in tasks)
 
     @staticmethod
-    def _rof_worker(src_path, target_path, rof_module):
+    def __rof_worker(src_path, target_path, rof_module):
         """Static worker for ROF to avoid pickling issues."""
         lbda, tolerance, max_iterations = 0.12, 1e-5, 100
 
@@ -225,7 +225,8 @@ class DieStudyWrapper(PipelineWrapper):
         cv2.imwrite(target_path, denoised)
 
     def compute_matches(self, matcher_module, dst_utils, images_path: str, output_csv_path: str):
-        """Calculates matches and creates two CSVs: one for display (with paths) and one for calculation."""
+        """Calculates matches and creates two CSVs: one for display (with paths) and one for
+        calculation."""
         print(f"  - Calculating matches...")
         try:
             df = matcher_module.extract_matches_in_directory(images_path, count=True)

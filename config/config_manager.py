@@ -20,10 +20,10 @@ class ConfigManager:
             config_path (str): Path to the JSON configuration file. Defaults to 'config.json'.
         """
         self.config_path = config_path
-        self.config = self._load_config()
+        self.config = self.__load_config()
         self.target_side = "obverse"
 
-    def _load_config(self) -> Dict[str, Any]:
+    def __load_config(self) -> Dict[str, Any]:
         """
         Loads the JSON configuration file from disk.
         """
