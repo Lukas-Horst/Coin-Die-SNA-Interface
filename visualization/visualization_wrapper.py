@@ -254,9 +254,20 @@ class VisualizationWrapper:
             res = dm.detect_keypoints_and_match_SIFT(img_path1, img_path2)
             matches, kp1, kp2 = res[0], res[2], res[4]
 
+
         elif method_id == 4:  # SIFT + FLANN
-            res = dm.detect_keypoints_and_descriptors_flann_match(img_path1, img_path2)
-            matches, kp1, kp2 = res[0], res[2], res[4]
+            res = dm.flann_matcher(img_path1, img_path2)
+            knn_matches = res[0]  # This returns a list of tuples [(m, n), ...]
+            kp1, kp2 = res[2], res[4]
+
+            matches = []
+            for match_tuple in knn_matches:
+                # Ensure we really have 2 matches (k=2)
+                if len(match_tuple) == 2:
+                    m, n = match_tuple
+                    # Lowe's Ratio Test (Standard for clean SIFT matches)
+                    if m.distance < 0.75 * n.distance:
+                        matches.append(m)
 
         elif method_id == 5:  # SIFT + KNN
             res = dm.detect_keypoints_and_descriptors_knn_match(img_path1, img_path2)
