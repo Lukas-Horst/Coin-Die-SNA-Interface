@@ -254,32 +254,57 @@ class VisualizationWrapper:
             res = dm.detect_keypoints_and_match_SIFT(img_path1, img_path2)
             matches, kp1, kp2 = res[0], res[2], res[4]
 
-
         elif method_id == 4:  # SIFT + FLANN
             res = dm.flann_matcher(img_path1, img_path2)
-            knn_matches = res[0]  # This returns a list of tuples [(m, n), ...]
+            raw_matches = res[0]
             kp1, kp2 = res[2], res[4]
 
             matches = []
-            for match_tuple in knn_matches:
-                # Ensure we really have 2 matches (k=2)
-                if len(match_tuple) == 2:
-                    m, n = match_tuple
-                    # Lowe's Ratio Test (Standard for clean SIFT matches)
-                    if m.distance < 0.75 * n.distance:
-                        matches.append(m)
+
+            # Safety check: Handle empty results
+            if not raw_matches:
+                matches = []
+
+            # Case A: Standard KNN output (List of lists/tuples -> [[m, n], ...])
+            # Check if the first element is a list or tuple (iterable pair)
+            elif isinstance(raw_matches[0], (list, tuple)):
+                for entry in raw_matches:
+                    if len(entry) == 2:
+                        m, n = entry
+                        # Lowe's Ratio Test (0.75)
+                        if m.distance < 0.75 * n.distance:
+                            matches.append(m)
+
+            # Case B: Flat list of DMatch objects ([m, ...])
+            # The matcher likely already filtered them or isn't using KNN.
+            else:
+                matches = raw_matches
 
         elif method_id == 5:  # SIFT + KNN
             res = dm.detect_keypoints_and_descriptors_knn_match(img_path1, img_path2)
-            knn_matches = res[0]  # List of lists
+            raw_matches = res[0]
             kp1 = res[2]
             kp2 = res[4]
 
-            # Apply Ratio Test manually here for visualization (0.75 is standard)
             matches = []
-            for m, n in knn_matches:
-                if m.distance < 0.75 * n.distance:
-                    matches.append(m)
+
+            # Safety check: Handle empty results
+            if not raw_matches:
+                matches = []
+
+            # Case A: Standard KNN output (List of lists/tuples -> [[m, n], ...])
+            # We need to apply the Ratio Test manually.
+            elif isinstance(raw_matches[0], (list, tuple)):
+                for entry in raw_matches:
+                    if len(entry) == 2:
+                        m, n = entry
+                        if m.distance < 0.75 * n.distance:
+                            matches.append(m)
+
+            # Case B: Flat list of DMatch objects ([m, ...])
+            # The tool likely already filtered them.
+            else:
+                matches = raw_matches
 
         elif method_id == 6:  # ORB + Hamming
             res = dm.detect_keypoints_match_hamming(img_path1, img_path2)
