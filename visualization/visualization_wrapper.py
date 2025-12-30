@@ -7,7 +7,6 @@ import numpy as np
 import torch
 import imageio.v2 as io
 from io import BytesIO
-from timeit import default_timer as timer
 
 
 class VisualizationWrapper:

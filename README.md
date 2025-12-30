@@ -13,9 +13,27 @@ This interface currently supports the following pipelines. Please ensure you hav
 * **Die_Study** (ClaReNet / Frankfurt-BigDataLab)
     * [https://github.com/Frankfurt-BigDataLab/2023_CAA_ClaReNet/tree/main/Die_Study](https://github.com/Frankfurt-BigDataLab/2023_CAA_ClaReNet/tree/main/Die_Study)
 
-## Configuration & Usage
+## Installation & Dependencies
 
-To run an analysis, you must configure the central `config.json` file. This file controls input paths, output locations, and the selection of the active algorithm.
+To use this interface, you must install the necessary Python libraries.
+
+1.  **Interface Core:** Install the base dependencies for the interface logic.
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+2.  **Pipelines:** Depending on which analysis pipeline(s) you intend to use, you must install their specific dependencies. These are located within the respective pipeline folders inside `die_studies/`.
+    ```bash
+    # Example: Install requirements for Auto-Die-Studies
+    pip install -r die_studies/auto_die_studies/requirements.txt
+    
+    # Example: Install requirements for DieStudyTool
+    pip install -r die_studies/die_study_tool/requirements.txt
+    ```
+
+## Configuration
+
+To prepare an analysis, you must configure the central `config.json` file. This file controls input paths, output locations, and the selection of the active algorithm.
 
 For a successful execution, the following keys in the `paths` and `analysis_settings` sections are essential:
 
@@ -27,6 +45,15 @@ For a successful execution, the following keys in the `paths` and `analysis_sett
 * **`active_pipeline`**: Selects the algorithm to use (e.g., `"auto_die_studies"`, `"die_study_tool"`, or `"die_study"`).
 
 Depending on the `active_pipeline` chosen, you must also configure the specific section for that tool within the `pipelines` object (e.g., setting the `install_path`).
+
+## Execution
+
+Once the configuration is complete, you can start the analysis using the provided Jupyter Notebook.
+
+1.  Open the file **`coin_die-SNA_interface.ipynb`**.
+2.  **Execute all cells.**
+
+> **Note:** You do not need to adjust any code within the notebook itself. It automatically loads all necessary parameters from your `config.json` and executes the pipeline defined there.
 
 ## Documentation
 
